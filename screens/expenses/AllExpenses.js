@@ -1,7 +1,7 @@
-import { Text } from "react-native"
+import ExpensesOutput from "../../components/expenses/ExpensesOutput";
 
 const AllExpenses = () => {
-    return <Text>All Expenses</Text>
-}
+  return <ExpensesOutput />;
+};
 
-export default AllExpenses
+export default AllExpenses;
