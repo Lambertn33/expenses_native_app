@@ -1,7 +1,7 @@
 import ExpensesOutput from "../../components/expenses/ExpensesOutput";
 
 const AllExpenses = () => {
-  return <ExpensesOutput />;
+  return <ExpensesOutput period="All"/>;
 };
 
 export default AllExpenses;
