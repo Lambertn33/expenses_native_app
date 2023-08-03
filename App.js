@@ -8,6 +8,7 @@ import ManageExpense from "./screens/expenses/ManageExpense";
 import AllExpenses from "./screens/expenses/AllExpenses";
 import LatestExpenses from "./screens/expenses/LatestExpenses";
 import { GlobalStyles } from "./constants/styles";
+import Icon from "./components/expenses/UI/Icon";
 
 const Stack = createNativeStackNavigator();
 const Tabs = createBottomTabNavigator();
@@ -15,15 +16,25 @@ const Tabs = createBottomTabNavigator();
 const TabNavigator = () => {
   return (
     <Tabs.Navigator
-      screenOptions={{
-        headerStyle: {
-          backgroundColor: GlobalStyles.colors.primary500,
-        },
-        headerTintColor: "white",
-        tabBarStyle: {
-          backgroundColor: GlobalStyles.colors.primary500,
-        },
-        tabBarActiveTintColor: GlobalStyles.colors.accent500,
+      screenOptions={({ navigation }) => {
+        return {
+          headerStyle: {
+            backgroundColor: GlobalStyles.colors.primary500,
+          },
+          headerTintColor: "white",
+          tabBarStyle: {
+            backgroundColor: GlobalStyles.colors.primary500,
+          },
+          tabBarActiveTintColor: GlobalStyles.colors.accent500,
+          headerRight: () => (
+            <Icon
+              name="add"
+              color="white"
+              size={32}
+              onPress={() => navigation.navigate("manageExpense")}
+            />
+          ),
+        };
       }}
     >
       <Tabs.Screen
@@ -55,13 +66,22 @@ const TabNavigator = () => {
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="expenses">
+      <Stack.Navigator
+        initialRouteName="expenses"
+        screenOptions={{
+          headerStyle: {
+            backgroundColor: GlobalStyles.colors.primary500,
+          },
+          headerTintColor: "white",
+        }}
+      >
         <Stack.Screen name="manageExpense" component={ManageExpense} />
         <Stack.Screen
           name="expenses"
           component={TabNavigator}
           options={{
             headerShown: false,
+            presentation: "modal",
           }}
         />
       </Stack.Navigator>
