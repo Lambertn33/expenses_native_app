@@ -28,6 +28,30 @@ const DUMMY_EXPENSES = [
     amount: 5.99,
     date: new Date("2023-07-24"),
   },
+  {
+    id: 5,
+    description: "React native course",
+    amount: 13.99,
+    date: new Date("2023-08-02"),
+  },
+  {
+    id: 6,
+    description: "A pair of shoes",
+    amount: 24.39,
+    date: new Date("2023-08-01"),
+  },
+  {
+    id: 7,
+    description: "Gym",
+    amount: 39.99,
+    date: new Date("2023-07-31"),
+  },
+  {
+    id: 8,
+    description: "Choir contribution",
+    amount: 5.99,
+    date: new Date("2023-07-24"),
+  },
 ];
 
 const ExpensesOutput = ({ expenses, period }) => {
