@@ -3,7 +3,7 @@ import { React, useState, createContext } from "react";
 export const ExpensesContext = createContext({
   expenses: [],
   addExpense: (item) => {},
-  editExpense: (id, item) => {},
+  updateExpense: (id, item) => {},
   deleteExpense: (id) => {},
 });
 
@@ -46,10 +46,11 @@ const ExpensesContextProvider = ({ children }) => {
     const expenseToUpdateIndex = expenses.findIndex(
       (expense) => expense.id === id
     );
-    const updatableExpense = expenses[expenseToUpdateIndex];
-    const updatedItem = { ...updatableExpense, updatedItemData };
+
     const updatedExpenses = [...expenses];
-    updatableExpense[expenseToUpdateIndex] = updatedItem;
+    const updatableExpense = updatedExpenses[expenseToUpdateIndex];
+    const updatedItem = { ...updatableExpense, ...updatedItemData };
+    updatedExpenses[expenseToUpdateIndex] = updatedItem;
     setExpenses(updatedExpenses);
   };
 

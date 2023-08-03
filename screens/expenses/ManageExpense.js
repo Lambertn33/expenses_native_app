@@ -1,10 +1,12 @@
-import { useEffect } from "react";
-import { StyleSheet, View } from "react-native";
+import { useEffect, useContext } from "react";
+import { StyleSheet, View, Alert } from "react-native";
 import Icon from "../../components/expenses/UI/Icon";
 import { GlobalStyles } from "../../constants/styles";
 import Button from "../../components/expenses/UI/Button";
+import { ExpensesContext } from "../../context/ExpensesContext";
 
 const ManageExpense = ({ route, navigation }) => {
+  const expensesCtx = useContext(ExpensesContext);
   const expenseId = route.params?.expenseId;
   const isEditing = !!expenseId;
 
@@ -19,12 +21,43 @@ const ManageExpense = ({ route, navigation }) => {
   };
 
   const deleteHandler = () => {
-    goBackHandler();
+    Alert.alert(
+      "Delete Expense",
+      "are you sure you want to delete this expense",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "OK",
+          onPress: () => {
+            expensesCtx.deleteExpense(expenseId);
+            goBackHandler();
+          },
+        },
+      ],
+      { cancelable: false }
+    );
   };
   const cancelHandler = () => {
     goBackHandler();
   };
   const addOrUpdateHandler = () => {
+    if (isEditing) {
+      const editedExpense = {
+        id: Math.floor(Math.random() * (1000 - 2 + 1) + 2),
+        description: "Edited...",
+        amount: 12.39,
+        date: new Date("2023-08-02"),
+      };
+      expensesCtx.updateExpense(expenseId, editedExpense);
+    } else {
+      const newExpense = {
+        id: Math.floor(Math.random() * (1000 - 2 + 1) + 2),
+        description: "Swimming",
+        amount: 123.39,
+        date: new Date("2023-08-02"),
+      };
+      expensesCtx.addExpense(newExpense);
+    }
     goBackHandler();
   };
 
@@ -38,7 +71,12 @@ const ManageExpense = ({ route, navigation }) => {
       </View>
       {isEditing && (
         <View style={styles.deleteContainer}>
-          <Icon onPress={deleteHandler} name="trash" size={32} color={GlobalStyles.colors.error500} />
+          <Icon
+            onPress={deleteHandler}
+            name="trash"
+            size={32}
+            color={GlobalStyles.colors.error500}
+          />
         </View>
       )}
     </View>
