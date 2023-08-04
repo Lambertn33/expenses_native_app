@@ -6,13 +6,14 @@ import Input from "./UI/Input";
 const ExpenseForm = ({
   title,
   onCancel,
+  expenseToEdit,
   onCreateOrUpdate,
   createOrUpdateBtnLabel,
 }) => {
   const [inputValues, setInputValues] = useState({
-    amount: "",
-    date: "",
-    description: "",
+    amount: expenseToEdit ? expenseToEdit.amount.toString() : "",
+    date: expenseToEdit ? expenseToEdit.date.toISOString().slice(0, 10) : "",
+    description: expenseToEdit ? expenseToEdit.description : "",
   });
 
   const inputChangedHandler = (input, value) => {
