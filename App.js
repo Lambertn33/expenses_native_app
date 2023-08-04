@@ -67,6 +67,7 @@ const TabNavigator = () => {
 export default function App() {
   return (
     <ExpensesContextProvider>
+      <StatusBar style="light" />
       <NavigationContainer>
         <Stack.Navigator
           initialRouteName="expenses"

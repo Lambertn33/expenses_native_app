@@ -1,9 +1,9 @@
 import { useEffect, useContext } from "react";
 import { StyleSheet, View, Alert } from "react-native";
-import Icon from "../../components/expenses/UI/Icon";
 import { GlobalStyles } from "../../constants/styles";
-import Button from "../../components/expenses/UI/Button";
 import { ExpensesContext } from "../../context/ExpensesContext";
+import ExpenseForm from "../../components/expenses/ExpenseForm";
+import Icon from "../../components/expenses/UI/Icon";
 
 const ManageExpense = ({ route, navigation }) => {
   const expensesCtx = useContext(ExpensesContext);
@@ -40,35 +40,21 @@ const ManageExpense = ({ route, navigation }) => {
   const cancelHandler = () => {
     goBackHandler();
   };
-  const addOrUpdateHandler = () => {
-    if (isEditing) {
-      const editedExpense = {
-        id: Math.floor(Math.random() * (1000 - 2 + 1) + 2),
-        description: "Edited...",
-        amount: 12.39,
-        date: new Date("2023-08-02"),
-      };
-      expensesCtx.updateExpense(expenseId, editedExpense);
-    } else {
-      const newExpense = {
-        id: Math.floor(Math.random() * (1000 - 2 + 1) + 2),
-        description: "Swimming",
-        amount: 123.39,
-        date: new Date("2023-08-02"),
-      };
-      expensesCtx.addExpense(newExpense);
-    }
+  const addOrUpdateHandler = (expenseData) => {
+    isEditing
+      ? expensesCtx.updateExpense(expenseId, expenseData)
+      : expensesCtx.addExpense(expenseData);
     goBackHandler();
   };
 
   return (
     <View style={styles.container}>
-      <View style={styles.buttonsContainer}>
-        <Button onPress={cancelHandler}>Cancel</Button>
-        <Button onPress={addOrUpdateHandler}>
-          {isEditing ? "Update" : "Create"}
-        </Button>
-      </View>
+      <ExpenseForm
+        title={isEditing ? "Edit expense" : "Create expense"}
+        createOrUpdateBtnLabel={isEditing ? "Edit" : "Create"}
+        onCancel={cancelHandler}
+        onCreateOrUpdate={addOrUpdateHandler}
+      />
       {isEditing && (
         <View style={styles.deleteContainer}>
           <Icon
@@ -96,11 +82,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderTopColor: "white",
     borderTopWidth: 2,
-  },
-  buttonsContainer: {
-    flexDirection: "row",
-    justifyContent: "center",
-    gap: 12,
   },
 });
 
