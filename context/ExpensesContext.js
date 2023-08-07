@@ -30,10 +30,12 @@ const ExpensesContextProvider = ({ children }) => {
     fetchExpenses();
   }, []);
 
-  const addExpense = (newExpense) =>
+  const addExpense = async(newExpense) => {
+    expensesServices.createNewExpense(newExpense);
     setExpenses((prevState) => {
       return [...prevState, newExpense];
     });
+  }
 
   const updateExpense = (id, updatedItemData) => {
     const expenseToUpdateIndex = expenses.findIndex(

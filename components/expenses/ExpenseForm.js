@@ -28,15 +28,14 @@ const ExpenseForm = ({
   const createOrUpdateHandler = () => {
     const { amount, date, description } = inputValues;
     const amountIsValid = !isNaN(amount) && amount > 0;
-    const dateIsValid = date !== "Invalid Date";
+    const dateIsValid = (date !== "Invalid Date");
     const descriptionIsValid = description.trim().length > 0;
 
-    if (!amountIsValid || dateIsValid || descriptionIsValid) {
+    if (!amountIsValid || !dateIsValid || !descriptionIsValid) {
       Alert.alert("Error...", "please correct all errors and try again");
       return;
     }
     const expenseData = {
-      id: Math.floor(Math.random() * (1000 - 2 + 1) + 2),
       amount: +amount,
       date: new Date(date),
       description: description,
