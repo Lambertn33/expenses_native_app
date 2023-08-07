@@ -1,4 +1,5 @@
-import { React, useState, createContext } from "react";
+import { React, useState, useEffect, createContext } from "react";
+import expensesServices from "../util/http";
 
 export const ExpensesContext = createContext({
   expenses: [],
@@ -7,35 +8,27 @@ export const ExpensesContext = createContext({
   deleteExpense: (id) => {},
 });
 
-const DUMMY_EXPENSES = [
-  {
-    id: 1,
-    description: "React native course",
-    amount: 13.99,
-    date: new Date("2023-08-02"),
-  },
-  {
-    id: 2,
-    description: "A pair of shoes",
-    amount: 24.39,
-    date: new Date("2023-08-01"),
-  },
-  {
-    id: 3,
-    description: "React native course",
-    amount: 13.99,
-    date: new Date("2023-06-02"),
-  },
-  {
-    id: 4,
-    description: "A pair of shoes",
-    amount: 24.39,
-    date: new Date("2023-07-01"),
-  },
-];
-
 const ExpensesContextProvider = ({ children }) => {
-  const [expenses, setExpenses] = useState(DUMMY_EXPENSES);
+  const [expenses, setExpenses] = useState([]);
+
+  useEffect(() => {
+    const fetchExpenses = async () => {
+      const realExpenses = [];
+      const fetchedExpenses = await expensesServices.getExpenses();
+      for (const exp of fetchedExpenses) {
+        const expense = {
+          id: exp.id,
+          amount: +exp.amount,
+          date: new Date(exp.date),
+          description: exp.description,
+        };
+        realExpenses.push(expense);
+      }
+      setExpenses(realExpenses);
+    };
+
+    fetchExpenses();
+  }, []);
 
   const addExpense = (newExpense) =>
     setExpenses((prevState) => {
