@@ -4,9 +4,12 @@ import { GlobalStyles } from "../../constants/styles";
 import { ExpensesContext } from "../../context/ExpensesContext";
 import ExpenseForm from "../../components/expenses/ExpenseForm";
 import Icon from "../../components/expenses/UI/Icon";
+import Loader from "../../components/expenses/UI/Loader";
+import expensesServices from "../../util/http";
 
 const ManageExpense = ({ route, navigation }) => {
   const expensesCtx = useContext(ExpensesContext);
+  const isLoading = expensesCtx.isLoading;
   const expenseId = route.params?.expenseId;
   const isEditing = !!expenseId;
   const expenseToEdit = expensesCtx.expenses.find(
@@ -23,32 +26,26 @@ const ManageExpense = ({ route, navigation }) => {
     navigation.goBack();
   };
 
-  const deleteHandler = () => {
-    Alert.alert(
-      "Delete Expense",
-      "are you sure you want to delete this expense",
-      [
-        { text: "Cancel", style: "cancel" },
-        {
-          text: "OK",
-          onPress: () => {
-            expensesCtx.deleteExpense(expenseId);
-            goBackHandler();
-          },
-        },
-      ],
-      { cancelable: false }
-    );
-  };
   const cancelHandler = () => {
     goBackHandler();
   };
+
+  const deleteHandler = async () => {
+    await expensesServices.deleteExpense(expenseId);
+    expensesCtx.deleteExpense(expenseId);
+    goBackHandler();
+  };
+
   const addOrUpdateHandler = (expenseData) => {
     isEditing
       ? expensesCtx.updateExpense(expenseId, expenseData)
       : expensesCtx.addExpense(expenseData);
     goBackHandler();
   };
+
+  if (isLoading) {
+    return <Loader />;
+  }
 
   return (
     <View style={styles.container}>
