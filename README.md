@@ -1,5 +1,7 @@
 # expenses_native_app
-A simple react native application that manages user expenses
+A simple react native application that manages user expenses,
+
+users should be able to sign up, sign in and manage their expenses
 
 server (node + typescript): https://github.com/Lambertn33/expenses_native_app_server
 
