@@ -1,12 +1,16 @@
-import { useState } from "react";
-import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
+import { useState, useContext } from "react";
+import { StyleSheet, View, Text, TouchableOpacity, Alert } from "react-native";
 import Input from "../../components/expenses/UI/Input";
 import Button from "../../components/expenses/UI/Button";
+import Loader from "../../components/expenses/UI/Loader";
 import { GlobalStyles } from "../../constants/styles";
 import AuthServices from "../../util/http";
+import { AuthContext } from "../../context/AuthContext";
 
 const Signup = () => {
+  const authCtx = useContext(AuthContext);
   const [isLoginMode, setIsLoginMode] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [inputValues, setInputValues] = useState({
     names: "",
     email: "",
@@ -18,15 +22,32 @@ const Signup = () => {
       email: inputValues.email,
       password: inputValues.password,
     };
-    if (!isLoginMode) user = { ...user, names: inputValues.names };
-    try {
-      if (isLoginMode) {
-        await AuthServices.authenticate(user, "signin");
-      } else {
-        await AuthServices.authenticate(user, "signup");
+    if (
+      inputValues.email.trim().length === 0 ||
+      inputValues.password.trim().length === 0
+    ) {
+      Alert.alert("Error...", "please fill all the form");
+      return;
+    }
+
+    if (!isLoginMode) {
+      if (inputValues.names.trim().length === 0) {
+        Alert.alert("Error...", "please fill all the form");
+        return;
       }
+      user = { ...user, names: inputValues.names };
+    }
+    try {
+      setIsLoading(true);
+      let response = isLoginMode
+        ? await AuthServices.authenticate(user, "signin")
+        : await AuthServices.authenticate(user, "signup");
+      const token = { response };
+      authCtx.authenticate(token);
+      setIsLoading(false);
     } catch (error) {
-      console.log(error);
+      setIsLoading(false);
+      Alert.alert("Error...", error.response.data.message);
     }
   };
 
@@ -47,6 +68,10 @@ const Signup = () => {
       };
     });
   };
+
+  if (isLoading) {
+    return <Loader />;
+  }
 
   return (
     <View style={styles.formContainer}>

@@ -11,6 +11,7 @@ import Auth from "./screens/auth/Auth";
 import { GlobalStyles } from "./constants/styles";
 import Icon from "./components/expenses/UI/Icon";
 import ExpensesContextProvider from "./context/ExpensesContext";
+import AuthContextProvider from "./context/AuthContext";
 
 const Stack = createNativeStackNavigator();
 const Tabs = createBottomTabNavigator();
@@ -67,30 +68,32 @@ const TabNavigator = () => {
 
 export default function App() {
   return (
-    <ExpensesContextProvider>
-      <StatusBar style="light" />
-      <NavigationContainer>
-        <Stack.Navigator
-          initialRouteName="auth"
-          screenOptions={{
-            headerStyle: {
-              backgroundColor: GlobalStyles.colors.primary500,
-            },
-            headerTintColor: "white",
-          }}
-        >
-          <Stack.Screen name="auth" component={Auth} />
-          <Stack.Screen name="manageExpense" component={ManageExpense} />
-          <Stack.Screen
-            name="expenses"
-            component={TabNavigator}
-            options={{
-              headerShown: false,
-              presentation: "modal",
+    <AuthContextProvider>
+      <ExpensesContextProvider>
+        <StatusBar style="light" />
+        <NavigationContainer>
+          <Stack.Navigator
+            initialRouteName="auth"
+            screenOptions={{
+              headerStyle: {
+                backgroundColor: GlobalStyles.colors.primary500,
+              },
+              headerTintColor: "white",
             }}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
-    </ExpensesContextProvider>
+          >
+            <Stack.Screen name="auth" component={Auth} />
+            <Stack.Screen name="manageExpense" component={ManageExpense} />
+            <Stack.Screen
+              name="expenses"
+              component={TabNavigator}
+              options={{
+                headerShown: false,
+                presentation: "modal",
+              }}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </ExpensesContextProvider>
+    </AuthContextProvider>
   );
 }
