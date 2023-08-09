@@ -7,6 +7,7 @@ import { Ionicons } from "@expo/vector-icons";
 import ManageExpense from "./screens/expenses/ManageExpense";
 import AllExpenses from "./screens/expenses/AllExpenses";
 import LatestExpenses from "./screens/expenses/LatestExpenses";
+import Auth from "./screens/auth/Auth";
 import { GlobalStyles } from "./constants/styles";
 import Icon from "./components/expenses/UI/Icon";
 import ExpensesContextProvider from "./context/ExpensesContext";
@@ -70,7 +71,7 @@ export default function App() {
       <StatusBar style="light" />
       <NavigationContainer>
         <Stack.Navigator
-          initialRouteName="expenses"
+          initialRouteName="auth"
           screenOptions={{
             headerStyle: {
               backgroundColor: GlobalStyles.colors.primary500,
@@ -78,6 +79,7 @@ export default function App() {
             headerTintColor: "white",
           }}
         >
+          <Stack.Screen name="auth" component={Auth} />
           <Stack.Screen name="manageExpense" component={ManageExpense} />
           <Stack.Screen
             name="expenses"
