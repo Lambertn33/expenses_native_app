@@ -4,7 +4,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 
 import ManageExpense from "./screens/expenses/ManageExpense";
 import AllExpenses from "./screens/expenses/AllExpenses";
@@ -19,7 +19,9 @@ import { View } from "react-native";
 const Stack = createNativeStackNavigator();
 const Tabs = createBottomTabNavigator();
 
+
 const TabNavigator = () => {
+  const authCtx = useContext(AuthContext);
   return (
     <Tabs.Navigator
       screenOptions={({ navigation }) => {
@@ -33,19 +35,14 @@ const TabNavigator = () => {
           },
           tabBarActiveTintColor: GlobalStyles.colors.accent500,
           headerRight: () => (
-            <View>
+            <View style={{flexDirection: 'row'}}>
               <Icon
                 name="add"
                 color="white"
                 size={32}
                 onPress={() => navigation.navigate("manageExpense")}
               />
-              <Icon
-                name="add"
-                color="white"
-                size={32}
-                onPress={() => {}}
-              />
+              <Icon name="log-out" color="white" size={32} onPress={authCtx.logout} />
             </View>
           ),
         };

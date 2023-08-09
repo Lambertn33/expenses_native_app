@@ -2,6 +2,7 @@ import axios from "axios";
 
 import { getToken } from "./token";
 
+//TODO: PUT BACKEND URL IN .env
 const BACKEND_URL = "http://192.168.1.64:5000";
 
 const authenticate = async (user, mode) => {
@@ -43,7 +44,11 @@ const updateExpense = async (id, expense) => {
 
 const deleteExpense = async (id) => {
   const token = await getToken();
-  const response = await axios.delete(`${BACKEND_URL}/expenses/${id}`);
+  const response = await axios.delete(`${BACKEND_URL}/expenses/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
   return await response.data;
 };
 
