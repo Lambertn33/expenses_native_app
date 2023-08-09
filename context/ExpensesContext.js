@@ -14,20 +14,25 @@ const ExpensesContextProvider = ({ children }) => {
   const [isLoading, setisLoading] = useState(true);
 
   const fetchExpenses = async () => {
-    const realExpenses = [];
-    setisLoading(true);
-    const fetchedExpenses = await expensesServices.getExpenses();
-    for (const exp of fetchedExpenses) {
-      const expense = {
-        id: exp.id,
-        amount: +exp.amount,
-        date: new Date(exp.date),
-        description: exp.description,
-      };
-      realExpenses.push(expense);
+    try {
+      const realExpenses = [];
+      setisLoading(true);
+      const fetchedExpenses = await expensesServices.getExpenses();
+      for (const exp of fetchedExpenses) {
+        const expense = {
+          id: exp.id,
+          amount: +exp.amount,
+          date: new Date(exp.date),
+          description: exp.description,
+        };
+        realExpenses.push(expense);
+      }
+      setExpenses(realExpenses);
+      setisLoading(false);
+    } catch (error) {
+      setisLoading(false);
+      console.log(error.response.data);
     }
-    setExpenses(realExpenses);
-    setisLoading(false);
   };
 
   useEffect(() => {

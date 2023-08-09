@@ -2,7 +2,9 @@ import { StatusBar } from "expo-status-bar";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
+import { useContext, useEffect } from "react";
 
 import ManageExpense from "./screens/expenses/ManageExpense";
 import AllExpenses from "./screens/expenses/AllExpenses";
@@ -11,7 +13,8 @@ import Auth from "./screens/auth/Auth";
 import { GlobalStyles } from "./constants/styles";
 import Icon from "./components/expenses/UI/Icon";
 import ExpensesContextProvider from "./context/ExpensesContext";
-import AuthContextProvider from "./context/AuthContext";
+import AuthContextProvider, { AuthContext } from "./context/AuthContext";
+import { View } from "react-native";
 
 const Stack = createNativeStackNavigator();
 const Tabs = createBottomTabNavigator();
@@ -30,12 +33,20 @@ const TabNavigator = () => {
           },
           tabBarActiveTintColor: GlobalStyles.colors.accent500,
           headerRight: () => (
-            <Icon
-              name="add"
-              color="white"
-              size={32}
-              onPress={() => navigation.navigate("manageExpense")}
-            />
+            <View>
+              <Icon
+                name="add"
+                color="white"
+                size={32}
+                onPress={() => navigation.navigate("manageExpense")}
+              />
+              <Icon
+                name="add"
+                color="white"
+                size={32}
+                onPress={() => {}}
+              />
+            </View>
           ),
         };
       }}
@@ -66,34 +77,56 @@ const TabNavigator = () => {
   );
 };
 
+const ProtectedStack = () => {
+  return (
+    <ExpensesContextProvider>
+      <Stack.Navigator initialRouteName="expenses">
+        <Stack.Screen name="manageExpense" component={ManageExpense} />
+        <Stack.Screen
+          name="expenses"
+          component={TabNavigator}
+          options={{
+            headerShown: false,
+            presentation: "modal",
+          }}
+        />
+      </Stack.Navigator>
+    </ExpensesContextProvider>
+  );
+};
+
+const PublicStack = () => {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: GlobalStyles.colors.primary500,
+        },
+        headerTintColor: "white",
+      }}
+    >
+      <Stack.Screen name="auth" component={Auth} />
+    </Stack.Navigator>
+  );
+};
+
+const Root = () => {
+  const authCtx = useContext(AuthContext);
+  const isAuthenticated = authCtx.isAuthenticated;
+  return (
+    <NavigationContainer>
+      {isAuthenticated ? <ProtectedStack /> : <PublicStack />}
+    </NavigationContainer>
+  );
+};
+
 export default function App() {
   return (
-    <AuthContextProvider>
-      <ExpensesContextProvider>
-        <StatusBar style="light" />
-        <NavigationContainer>
-          <Stack.Navigator
-            initialRouteName="auth"
-            screenOptions={{
-              headerStyle: {
-                backgroundColor: GlobalStyles.colors.primary500,
-              },
-              headerTintColor: "white",
-            }}
-          >
-            <Stack.Screen name="auth" component={Auth} />
-            <Stack.Screen name="manageExpense" component={ManageExpense} />
-            <Stack.Screen
-              name="expenses"
-              component={TabNavigator}
-              options={{
-                headerShown: false,
-                presentation: "modal",
-              }}
-            />
-          </Stack.Navigator>
-        </NavigationContainer>
-      </ExpensesContextProvider>
-    </AuthContextProvider>
+    <>
+      <StatusBar style="light" />
+      <AuthContextProvider>
+        <Root />
+      </AuthContextProvider>
+    </>
   );
 }

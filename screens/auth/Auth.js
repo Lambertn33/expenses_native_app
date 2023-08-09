@@ -1,4 +1,5 @@
 import { useState, useContext } from "react";
+import { useNavigation, StackActions } from "@react-navigation/native";
 import { StyleSheet, View, Text, TouchableOpacity, Alert } from "react-native";
 import Input from "../../components/expenses/UI/Input";
 import Button from "../../components/expenses/UI/Button";
@@ -7,8 +8,9 @@ import { GlobalStyles } from "../../constants/styles";
 import AuthServices from "../../util/http";
 import { AuthContext } from "../../context/AuthContext";
 
-const Signup = () => {
+const Auth = () => {
   const authCtx = useContext(AuthContext);
+  const navigation = useNavigation();
   const [isLoginMode, setIsLoginMode] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [inputValues, setInputValues] = useState({
@@ -42,7 +44,7 @@ const Signup = () => {
       let response = isLoginMode
         ? await AuthServices.authenticate(user, "signin")
         : await AuthServices.authenticate(user, "signup");
-      const token = { response };
+      const { token } = await response;
       authCtx.authenticate(token);
       setIsLoading(false);
     } catch (error) {
@@ -151,4 +153,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Signup;
+export default Auth;
