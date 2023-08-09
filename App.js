@@ -95,6 +95,7 @@ const PublicStack = () => {
   return (
     <Stack.Navigator
       screenOptions={{
+        title: "Welcome to expenses App",
         headerStyle: {
           backgroundColor: GlobalStyles.colors.primary500,
         },
