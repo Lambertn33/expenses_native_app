@@ -21,9 +21,9 @@ const Signup = () => {
     if (!isLoginMode) user = { ...user, names: inputValues.names };
     try {
       if (isLoginMode) {
-        await AuthServices.signin(user);
+        await AuthServices.authenticate(user, "signin");
       } else {
-        await AuthServices.signup(user)
+        await AuthServices.authenticate(user, "signup");
       }
     } catch (error) {
       console.log(error);

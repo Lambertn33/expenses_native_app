@@ -2,14 +2,8 @@ import axios from "axios";
 
 const BACKEND_URL = "http://192.168.1.64:5000";
 
-const signup = async (newUser) => {
-  const response = await axios.post(`${BACKEND_URL}/auth/signup`, newUser);
-  console.log(await response.data);
-  return await response.data;
-};
-const signin = async (user) => {
-  const response = await axios.post(`${BACKEND_URL}/auth/signin`, user);
-  console.log(await response.data);
+const authenticate = async (user, mode) => {
+  const response = await axios.post(`${BACKEND_URL}/auth/${mode}`, user);
   return await response.data;
 };
 
@@ -35,8 +29,7 @@ const deleteExpense = async (id) => {
 };
 
 export default {
-  signin,
-  signup,
+  authenticate,
   createNewExpense,
   getExpenses,
   deleteExpense,
