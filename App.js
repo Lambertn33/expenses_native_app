@@ -19,7 +19,6 @@ import { View } from "react-native";
 const Stack = createNativeStackNavigator();
 const Tabs = createBottomTabNavigator();
 
-
 const TabNavigator = () => {
   const authCtx = useContext(AuthContext);
   return (
